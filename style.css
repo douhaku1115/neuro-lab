@@ -1,0 +1,193 @@
+/* 神経ラボ。gene-lab と同じ色づかいに揃えてある（姉妹アプリとして並ぶので） */
+
+:root{
+  --bg:#f4f6f9;
+  --panel:#ffffff;
+  --ink:#1e2530;
+  --muted:#68727f;
+  --line:#dde3ea;
+  --accent:#2f6fd0;
+  --accent-soft:#e8f0fd;
+  --warn:#c2521c;
+  --ok:#1f7a4d;
+  --fire:#d9453d;
+  --cue:#f0b429;
+  --mono:"Consolas","Courier New",ui-monospace,monospace;
+  --headh:50px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Yu Gothic UI","Yu Gothic","Meiryo",system-ui,sans-serif;
+  font-size:15px; line-height:1.75;
+}
+
+/* ---------- ヘッダ ---------- */
+.top{
+  background:var(--panel); border-bottom:1px solid var(--line);
+  padding:0 20px; height:var(--headh); position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; gap:16px;
+}
+.top h1{margin:0; font-size:15px; letter-spacing:.02em; white-space:nowrap}
+.stepbar{display:flex; gap:6px; overflow-x:auto; flex:1; min-width:0}
+.stepchip{
+  flex:0 0 auto; background:#eef1f5; border:1px solid var(--line);
+  border-radius:999px; padding:6px 13px 6px 7px; cursor:pointer;
+  font-size:12px; color:var(--muted); font-family:inherit; white-space:nowrap;
+}
+.stepchip .n{
+  display:inline-flex; width:19px; height:19px; border-radius:50%;
+  background:#c9d2dd; color:#fff; align-items:center; justify-content:center;
+  font-size:11px; margin-right:7px;
+}
+.stepchip:hover{background:#e4e9f0}
+.stepchip.on{background:var(--accent); border-color:var(--accent); color:#fff}
+.stepchip.on .n{background:rgba(255,255,255,.3)}
+.stepchip.on:hover{background:#255bb0; border-color:#255bb0; color:#fff}
+
+/* ---------- レイアウト ---------- */
+/* 左に読むもの、右に見るもの。右は画面に貼りつけておく。
+   操作した手と結果が離れていると、何が変わったのか見えないため。 */
+.grid{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(360px,460px);
+  gap:18px; padding:18px 20px; align-items:start;
+}
+.col-left,.col-right{display:flex; flex-direction:column; gap:14px; min-width:0}
+.col-right{position:sticky; top:calc(var(--headh) + 18px)}
+
+@media (max-width:980px){
+  .grid{grid-template-columns:1fr}
+  .col-right{position:static; order:-1}
+}
+
+/* ---------- 説明 ---------- */
+.lesson{
+  background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px 18px;
+}
+.lesson h2{margin:0 0 4px; font-size:17px; line-height:1.5}
+.lesson .lead{margin:0 0 12px; color:var(--accent); font-size:14px}
+.lesson dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:6px 12px; align-items:baseline}
+.lesson dt{
+  font-size:11px; color:#fff; background:var(--muted); border-radius:4px;
+  padding:1px 7px; white-space:nowrap; line-height:1.6;
+}
+.lesson dt.why{background:var(--accent)}
+.lesson dt.fly{background:var(--ok)}
+.lesson dd{margin:0; font-size:14px}
+.lesson b{color:var(--accent); font-weight:600}
+/* 説明文のなかで、図の色と文字を結びつける小さな印 */
+.lesson .k{font-weight:600; white-space:nowrap}
+.lesson .k::before{
+  content:""; display:inline-block; width:9px; height:9px; border-radius:2px;
+  margin-right:4px; vertical-align:baseline;
+}
+.lesson .k0{color:#6c757d} .lesson .k0::before{background:#9aa5b1}
+.lesson .k1{color:#2f6fd0} .lesson .k1::before{background:#2f6fd0}
+.lesson .k2{color:#c2521c} .lesson .k2::before{background:#eb6834}
+.lesson code{font-family:var(--mono); background:#eef1f5; padding:1px 5px; border-radius:4px; font-size:12px}
+.lesson .note{
+  margin-top:12px; padding:8px 12px; border-left:3px solid var(--cue);
+  background:#fffaf0; font-size:13px; color:#5a4a28;
+}
+
+/* ---------- パネル ---------- */
+.panel{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px 14px}
+.panel-title{font-size:12px; color:var(--muted); margin-bottom:10px}
+
+/* ---------- 操作 ---------- */
+.controls{display:flex; flex-direction:column; gap:11px}
+.ctl{display:grid; grid-template-columns:132px 1fr auto; gap:10px; align-items:center}
+.ctl > label{font-size:13px; color:var(--ink)}
+.ctl .val{font-size:12px; color:var(--muted); font-family:var(--mono); min-width:72px; text-align:right}
+.ctl input[type=range]{width:100%; accent-color:var(--accent)}
+.ctl .seg{display:flex; gap:0; border:1px solid var(--line); border-radius:8px; overflow:hidden}
+.ctl .seg button{
+  flex:1; border:0; background:#f7f9fc; padding:6px 4px; cursor:pointer;
+  font-family:inherit; font-size:12px; color:var(--muted); border-right:1px solid var(--line);
+}
+.ctl .seg button:last-child{border-right:0}
+.ctl .seg button.on{background:var(--accent); color:#fff}
+.ctl .hint{grid-column:1 / -1; font-size:12px; color:var(--muted); margin-top:-4px}
+
+.runbar{display:flex; align-items:center; gap:10px; margin-top:13px; padding-top:11px; border-top:1px solid var(--line)}
+.clock{margin-left:auto; font-family:var(--mono); font-size:12px; color:var(--muted)}
+.speed{font-size:12px; color:var(--muted); display:flex; align-items:center; gap:5px}
+.speed select{font-family:inherit; font-size:12px; padding:3px 5px; border:1px solid var(--line); border-radius:6px; background:#fff}
+
+button.primary{
+  background:var(--accent); color:#fff; border:1px solid var(--accent);
+  border-radius:8px; padding:6px 16px; cursor:pointer; font-family:inherit; font-size:13px;
+}
+button.primary:hover{background:#255bb0}
+button.ghost{
+  background:#f7f9fc; color:var(--muted); border:1px solid var(--line);
+  border-radius:8px; padding:6px 13px; cursor:pointer; font-family:inherit; font-size:13px;
+}
+button.ghost:hover{background:#eef1f5}
+
+/* ---------- 絵 ---------- */
+.stage-panel{padding:10px}
+#stage{width:100%; height:330px; display:block; touch-action:none}
+#stage.grab{cursor:grab}
+#stage.grabbing{cursor:grabbing}
+.scope-panel{padding:10px}
+#scope{width:100%; height:150px; display:block}
+
+/* 図の拡大。枠を画面いっぱいに広げるだけで、図は毎コマ枠の大きさを読んで描き直すので、どの段もそのまま大きくなる */
+.stage-panel,.scope-panel{position:relative}
+.zoom-btn{position:absolute; top:12px; right:12px; z-index:2; padding:2px 10px; font-size:12px; opacity:.85}
+.zoom-btn:hover{opacity:1}
+.panel.zoomed{
+  position:fixed; inset:16px 404px 16px 16px; z-index:60; display:flex; flex-direction:column;
+  box-shadow:0 10px 40px rgba(20,28,40,.35);
+}
+.panel.zoomed #stage,.panel.zoomed #scope{flex:1; height:auto; min-height:0}
+body.has-zoom::before{content:''; position:fixed; inset:0; background:rgba(20,28,40,.45); z-index:55}
+/* 右の欄はスクロールで付いてくる（sticky）ので、重なりの順がその中に閉じる。拡大中は欄ごと手前に出す */
+body.has-zoom .col-right{z-index:60}
+/* 拡大していないほうの図は隠す。残すと膜の上に出たままになり、操作パネルと重なって見えた */
+body.has-zoom .col-right > .panel:not(.zoomed){visibility:hidden}
+/* 拡大中も操作できるよう、操作パネルを拡大した図の右に並べる */
+body.has-zoom #ctlPanel{
+  position:fixed; top:16px; right:16px; width:372px; max-height:calc(100vh - 32px); overflow:auto;
+  z-index:61; box-shadow:0 10px 40px rgba(20,28,40,.35);
+}
+body.has-zoom #ctlPanel .runbar{flex-wrap:wrap}
+/* 幅の狭い画面では、横に並べると図が半分に押し込まれる。図を上、操作パネルを下に並べる */
+@media (max-width:1100px){
+  .panel.zoomed{inset:12px 12px 38vh 12px}
+  body.has-zoom #ctlPanel{top:auto; bottom:12px; left:12px; right:12px; width:auto; max-height:calc(38vh - 24px)}
+}
+body.has-zoom #ctlPanel .clock{flex-basis:100%; margin-left:0}
+.panel.zoomed .readout{font-size:17px; gap:8px 24px}
+.panel.zoomed .readout b{font-size:19px}
+.panel.zoomed .zoom-btn{font-size:15px; padding:4px 14px}
+
+.readout{
+  display:flex; flex-wrap:wrap; gap:6px 16px; padding:8px 4px 2px;
+  border-top:1px solid var(--line); margin-top:8px; font-size:12px; color:var(--muted);
+}
+.readout b{font-family:var(--mono); color:var(--ink); font-weight:600; font-size:13px}
+
+/* ---------- まず試すこと ---------- */
+.try summary{cursor:pointer; font-size:13px; color:var(--accent)}
+.try ul{margin:8px 0 0; padding-left:20px; font-size:13px}
+.try li{margin-bottom:4px}
+
+/* ---------- 用語集 ---------- */
+.modal{position:fixed; inset:0; background:rgba(20,28,40,.45); z-index:40; display:flex; padding:40px 20px}
+.modal[hidden]{display:none}
+.modal-box{
+  background:var(--panel); border-radius:14px; margin:auto; max-width:660px; width:100%;
+  max-height:100%; overflow:auto; padding:18px 22px;
+}
+.modal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
+.modal dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:8px 16px; font-size:14px}
+.modal dt{font-weight:600; white-space:nowrap}
+.modal dd{margin:0; color:#41505f}
+
+/* ---------- フッタ ---------- */
+.foot{padding:6px 20px 28px; color:var(--muted); font-size:12px; max-width:1100px}
+.foot code{font-family:var(--mono); background:#eef1f5; padding:1px 5px; border-radius:4px}
